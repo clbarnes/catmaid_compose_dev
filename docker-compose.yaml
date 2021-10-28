@@ -1,0 +1,50 @@
+version: "3.9"
+
+volumes:
+  postgresql_data:
+  postgresql_backups:
+  nginx_logs:
+  static_files:
+
+services:
+
+  # postgreSQL/ postGIS
+  db:
+    image: postgis/postgis:13-3.1
+    volumes:
+      - ./volumes/postgresql/data:/var/lib/postgresql/data
+      - ./volumes/postgresql/backups:/backups
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    restart: on-failure
+
+  # nginx
+  web:
+    image: nginx:1.21.3
+    volumes:
+      - ./volumes/nginx/templates:/etc/nginx/templates
+      - static_files:/var/www/
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      NGINX_HOST: ${NGINX_HOST}
+
+  # rabbitmq
+  broker:
+
+  # catmaid base
+  startup:
+
+  # uWSGI
+  wsgi:
+
+  # daphne
+  asgi:
+
+  # celery
+  worker:
