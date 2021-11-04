@@ -1,9 +1,6 @@
 version: "3.9"
 
 volumes:
-  postgresql_data:
-  postgresql_backups:
-  nginx_logs:
   static_files:
 
 services:
@@ -14,9 +11,8 @@ services:
     volumes:
       - ./volumes/postgresql/data:/var/lib/postgresql/data
       - ./volumes/postgresql/backups:/backups
+      - ./volumes/log/postgresql:/var/log/postgresql
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     expose:
       - "5432"
@@ -28,6 +24,7 @@ services:
     volumes:
       - ./volumes/nginx/templates:/etc/nginx/templates
       - static_files:/var/www/
+      - ./volumes/log/nginx:/var/log/nginx
     ports:
       - "${HOST_HTTP_PORT}:80"
       - "${HOST_HTTPS_PORT}:443"
@@ -38,7 +35,7 @@ services:
   broker:
     image: rabbitmq:3.9
     volumes:
-      - ./volumes/rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
+      - ./volumes/log/rabbitmq:/var/log/rabbitmq
     expose:
       - "5672"
 
