@@ -8,45 +8,32 @@ services:
   # postgreSQL/ postGIS
   db:
     image: postgis/postgis:13-3.1
+    hostname: ${HOSTNAME_PREFIX}db
+    container_name: ${HOSTNAME_PREFIX}db
     volumes:
-      - ./volumes/postgresql/data:/var/lib/postgresql/data
-      - ./volumes/postgresql/backups:/backups
-      - ./volumes/log/postgresql:/var/log/postgresql
+      - ${VOLUME_PREFIX}/postgresql/data:/var/lib/postgresql/data
+      - ${VOLUME_PREFIX}/postgresql/backups:/backups
+      - ${VOLUME_PREFIX}/log/postgresql:/var/log/postgresql
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
     expose:
       - "5432"
     restart: on-failure
 
-  # nginx
-  web:
-    image: nginx:1.21.3
-    volumes:
-      - ./volumes/nginx/templates:/etc/nginx/templates
-      - static_files:/var/www/
-      - ./volumes/log/nginx:/var/log/nginx
-    ports:
-      - "${HOST_HTTP_PORT}:80"
-      - "${HOST_HTTPS_PORT}:443"
-    environment:
-      NGINX_HOST: ${NGINX_HOST}
-
   # rabbitmq
   broker:
-    image: rabbitmq:3.9
-    volumes:
-      - ./volumes/log/rabbitmq:/var/log/rabbitmq
+    image: rabbitmq:3.9-management
+    hostname: ${HOSTNAME_PREFIX}broker
+    container_name: ${HOSTNAME_PREFIX}broker
+    environment:
+      - RABBITMQ_DEFAULT_VHOST
+      - RABBITMQ_DEFAULT_USER
+      - RABBITMQ_DEFAULT_PASS
+    # TODO: fix log file volume, has permissions error and refuses to start
+    # volumes:
+    #   - ${VOLUME_PREFIX}/log/rabbitmq:/var/log/rabbitmq
     expose:
       - "5672"
-
-  # catmaid base
-  # startup:
-
-  # uWSGI
-  # wsgi:
-
-  # daphne
-  # asgi:
-
-  # celery
-  # worker:
+      - "15672"
