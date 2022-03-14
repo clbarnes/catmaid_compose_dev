@@ -26,4 +26,4 @@ You will need to use the same database name and credentials as the original.
 
 ## Utilities
 
-`get_ips.sh` prints the local IPs of each service.
+`get_ips.sh` prints the local IPs of each service, in a format which can be `source`d to store them as environment variables.

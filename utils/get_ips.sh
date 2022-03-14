@@ -1,4 +1,4 @@
 #!/bin/sh
 for SERVICE in db broker; do
-	echo "$SERVICE: $(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${HOSTNAME_PREFIX}$SERVICE)"
+	echo "export ${HOSTNAME_PREFIX}${SERVICE}_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${HOSTNAME_PREFIX}$SERVICE)"
 done
