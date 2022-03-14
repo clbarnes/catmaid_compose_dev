@@ -1,4 +1,4 @@
-# dev-compose
+# catmaid_compose_dev
 
 A docker-compose configuration for the services CATMAID requires, but not CATMAID itself.
 
