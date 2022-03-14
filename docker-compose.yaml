@@ -37,3 +37,5 @@ services:
     expose:
       - "5672"
       - "15672"
+    depends_on:
+      - db
